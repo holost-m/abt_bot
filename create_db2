@@ -1,0 +1,75 @@
+CREATE TABLE IF NOT EXISTS Children
+(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tg_id INTEGER,
+    name TEXT,
+    lastname TEXT,
+    age INTEGER,
+    group_abt INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS Marks
+(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    description TEXT,
+    photo_name TEXT,
+    level INTEGER -- 1 - один раз, 2 - неограниченно
+);
+
+CREATE TABLE IF NOT EXISTS Admins
+(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tg_id INTEGER,
+    name TEXT,
+    lastname TEXT,
+    level INTEGER, -- 1 - один раз, 2 - неограниченно
+    super INTEGER -- 0 - все, 1 - Миша Холостов
+);
+
+CREATE TABLE IF NOT EXISTS Children_marks
+(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    children_id INTEGER,
+    marks_id INTEGER,
+    date_mark TEXT,
+    admin_id INTEGER,
+    FOREIGN KEY (children_id)  REFERENCES Children (id),
+    FOREIGN KEY (marks_id)  REFERENCES Marks (id),
+    FOREIGN KEY (admin_id)  REFERENCES Admins (id)
+);
+
+CREATE TABLE IF NOT EXISTS Timetable
+(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date_table TEXT,
+    photo_name TEXT
+);
+
+CREATE TABLE IF NOT EXISTS Dayinfo
+(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date_day TEXT,
+    info TEXT
+);
+
+SELECT Children_marks.id, Children_marks.date_mark, Children.id,  Children.name, Children.lastname,
+       Children.age, Children.group_abt, 
+       Marks.id, Marks.name, Admins.id, Admins.name, Admins.lastname
+       
+                          FROM Children_marks
+                          LEFT JOIN Children ON Children_marks.children_id = Children.id
+                          LEFT JOIN Marks ON Marks.id = Children_marks.marks_id
+                          LEFT JOIN Admins ON Admins.id = Children_marks.admin_id;
+                          
+
+SELECT Admins.name, Admins.lastname, COUNT()
+FROM Children_marks LEFT JOIN Admins;
+
+
+
+
+
+
+
+
